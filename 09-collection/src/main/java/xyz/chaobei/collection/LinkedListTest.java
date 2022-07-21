@@ -2,6 +2,7 @@ package xyz.chaobei.collection;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class LinkedListTest {
 
@@ -17,7 +18,13 @@ public class LinkedListTest {
 
         // ListIterator
         Iterator iterator = list.iterator();
-        System.out.println(iterator.next());
+        ListIterator<String> listIterator = list.listIterator();
+
+        while (listIterator.hasNext()) {
+            System.out.println(listIterator.next());
+        }
+
+        list.get(0);
 
     }
 

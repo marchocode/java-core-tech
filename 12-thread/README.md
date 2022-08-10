@@ -144,4 +144,29 @@ public void uncaughtException(Thread t, Throwable e) {
 }
 ```
 
-如果没有给 `Thread` 类添加一个默认的处理器，那么直接使用 `ThreadGroup`类作为
+如果没有给 `Thread` 类添加一个默认的处理器，那么直接使用 `ThreadGroup`类作为默认的异常处理器。
+
+
+### 线程优先级
+默认优先级5，从1-10之间，但现在不推荐使用了，就算设置了高优先级，操作系统也不一定会先调用它。
+
+### 同步
+非同步造成数据丢失,根本原因是: 一条代码的指令并不是原子操作，所以指令中间可能会被分解。
+导致中间的操作被抹除掉。
+
+```java
+        accounts[from] -= amount;
+        System.out.printf("name=%s,amount %10.2f,from %d,to %s\n", threadName, amount, from, to);
+        accounts[to] += amount;
+```
+
+
+```java
+name=Thread-66,amount      27.00,from 0,to 2
+name=Thread-66,list=[15510.0, 24447.0, 17865.0, 3958.0, 18638.0, 2695.0, 3979.0, 2232.0, 273.0, 9600.0]
+name=Thread-66,System Total Amount Is:  99197.00
+```
+
+![](https://file.chaobei.xyz/202208102246416.png_imagess)
+
+### 锁对象

@@ -6,7 +6,7 @@ public class ThreadTest {
     private final static Integer DELAY = 10;
     private final static Double MAX_AMOUNT = 1000D;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         Runnable task1 = () -> {
 
@@ -42,6 +42,9 @@ public class ThreadTest {
         thread1.start();
         thread2.start();
 
+        System.out.println("thread1.join()");
+        thread1.join();
+        System.out.println("thread1.join() end....");
     }
 
 }

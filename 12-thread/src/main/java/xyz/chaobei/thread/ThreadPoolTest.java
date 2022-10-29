@@ -13,7 +13,10 @@ public class ThreadPoolTest {
         ExecutorService executorService = Executors.newFixedThreadPool(12);
 
         ThreadPoolTest threadPoolTest = new ThreadPoolTest();
+
         threadPoolTest.invokeAll(executorService);
+        // threadPoolTest.invokeAny(executorService);
+        // threadPoolTest.sortReturns(executorService);
 
         executorService.shutdown();
     }
@@ -38,7 +41,15 @@ public class ThreadPoolTest {
         System.out.println("main task get task1's return value");
     }
 
-    public void invokeAll(ExecutorService executorService) throws InterruptedException, ExecutionException {
+
+    /**
+     * Getting the fastest thread's returns
+     *
+     * @param executorService
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public void invokeAny(ExecutorService executorService) throws ExecutionException, InterruptedException {
 
         List<Callable<Long>> tasks = new ArrayList<>();
 
@@ -47,6 +58,81 @@ public class ThreadPoolTest {
             Callable<Long> item = () -> {
 
                 String threadName = Thread.currentThread().getName();
+                System.out.println(threadName + "is doing work...");
+
+                long speedTime = (int) (Math.random() * 2000);
+                Thread.sleep(speedTime);
+
+                System.out.println(threadName + "is done... time=" + speedTime);
+
+                return speedTime;
+            };
+
+            tasks.add(item);
+        }
+
+        // return the fastest
+        Long fast = executorService.invokeAny(tasks);
+
+        System.out.println("fast value=" + fast);
+    }
+
+    /**
+     * ExecutorCompletionService can help you return the sort values;
+     * @param executorService
+     * @throws InterruptedException
+     * @throws ExecutionException
+     */
+    public void sortReturns(ExecutorService executorService) throws InterruptedException, ExecutionException {
+
+        ExecutorCompletionService<Long> objectExecutorCompletionService = new ExecutorCompletionService<>(executorService);
+        List<Callable<Long>> tasks = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+
+            String threadName = "number:"+i;
+
+            Callable<Long> item = () -> {
+
+                System.out.println(threadName + "is doing work...");
+
+                long speedTime = (int) (Math.random() * 2000);
+                Thread.sleep(speedTime);
+
+                System.out.println(threadName + "is done... time=" + speedTime);
+
+                return speedTime;
+            };
+
+            tasks.add(item);
+        }
+
+        tasks.forEach(objectExecutorCompletionService::submit);
+
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println(objectExecutorCompletionService.take().get());
+        }
+
+    }
+
+
+    /**
+     * invoke all tasks, but the returned values don't have sort
+     *
+     * @param executorService
+     * @throws InterruptedException
+     * @throws ExecutionException
+     */
+    public void invokeAll(ExecutorService executorService) throws InterruptedException, ExecutionException {
+
+        List<Callable<Long>> tasks = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+
+            String threadName = "number:"+i;
+
+            Callable<Long> item = () -> {
+
                 System.out.println(threadName + "is doing work...");
 
                 long speedTime = (int) (Math.random() * 2000);

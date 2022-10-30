@@ -199,9 +199,57 @@ try {
 - signalAll() 将所有的等待线程赋予 `可运行`
 
 **注意：上面三个方法，必须在当前线程持有锁的情况下才可以调用。**
+其实和Object类的 `wait()` 方法以及`notify()` 方法类似。
 
 ### Synchronized 关键字
+JAVA对象从1.0版本开始,都持有一个 `内部锁` 在方法上加入 `synchronized` 关键字，则保护整个方法块，并且
+线程要调用整个方法块，必须获得对象的 `内部锁`. `内部锁` 也持有一个内部条件。和`Condition` 类似。 
 
+```java
+public void method() {
+        try {
+            lock.lock();
+            // do something...
+        } catch (Exception e) {
 
+        } finally {
+            lock.unlock();
+        }    
+}
+```
 
-### 监视器
+```java
+public synchronized void method() {
+    // do something...
+}
+```
+
+**注意：如果对一个静态方法加入 `Synchronized` 关键字也是合法的，但是会获得`Bank.class` 对象的锁**
+一个类的Class也是一个对象，静态方法的 `Synchronized` 会获得Class锁。
+导致如果一个线程获得了某一个对象的Class锁，其他线程就不能调用该类的其他同步方法。
+
+#### Synchronized Block
+
+```java
+public void test() {
+    
+    synchronized (obj) {
+        // do something    
+    }
+    
+}
+```
+
+#### 监视器
+JAVA中的每一个对象都持有一个 `内部锁` 和 `内部条件`。如果一个方式使用 `Sychronized` 关键字声明，则它就表现的像一个监视器。
+通过调用：
+
+1. wait() 当前持有锁的线程放弃这个锁，并且进入等待
+2. notify() 唤醒任意一个等待的线程，使其可以在下一次调度中具备获得锁的能力`可运行`。
+3. notifyAll()
+
+#### Volatile字段
+为实例字段提供一种免锁同步的访问机制。但 volatile 变量不能保证原子性。
+如果对共享变量除了赋值之外，不做任何操作，可以将这些变量声明为 `Volatile`
+
+### 原子性

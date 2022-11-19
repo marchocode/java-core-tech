@@ -68,9 +68,101 @@ finally 子句不管有无错误的出现，都会执行，一般用于清理上
 ### Logger
 
 #### Slf4j 
-经典日志框架，定义框架的接口，
+
+SLF4J 提供日志记录的接口，通过logback 作为日志的绑定：
+
+logback 需要 logback-core与logback-classic 出现在类路径上
+
+```xml
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.4.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.4.5</version>
+        </dependency>
+    
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.4</version>
+        </dependency>
+```
+
+### Logback
+
+logback作为日志绑定的实现：
+
+#### Config
+
+一个简单的配置文件
+```xml
+<configuration debug="true">
+
+  <variable name="LOG_DIR" value="." />
+
+  <!-- <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" /> -->
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS,Asia/Shanghai} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>${LOG_DIR}/myApp.log</file>
+    <append>false</append>
+    <immediateFlush>true</immediateFlush>
+    <encoder>
+      <pattern>%msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="debug">
+    <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILE" />
+  </root>
+</configuration>
+```
+
+#### Status data
+
+状态数据，通过设置监听器的方式打开：或者通过设置debug方式打开
+```xml
+<configuration debug="true">
+    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+```
+
+```text
+06:46:30,583 |-INFO in ch.qos.logback.classic.LoggerContext[default] - This is logback-classic version 1.4.5
+06:46:30,614 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback-test.xml]
+06:46:30,622 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [logback.xml] at [file:/workspaces/java-core-tech/logging/target/classes/logback.xml]
+06:46:30,772 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - Processing appender named [STDOUT]
+06:46:30,773 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - About to instantiate appender of type [ch.qos.logback.core.ConsoleAppender]
+06:46:30,780 |-INFO in ch.qos.logback.core.model.processor.ImplicitModelHandler - Assuming default type [ch.qos.logback.classic.encoder.PatternLayoutEncoder] for [encoder] property
+06:46:30,798 |-INFO in ch.qos.logback.classic.model.processor.RootLoggerModelHandler - Setting level of ROOT logger to DEBUG
+06:46:30,799 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [STDOUT] to Logger[ROOT]
+06:46:30,799 |-INFO in ch.qos.logback.core.model.processor.DefaultProcessor@543c6f6d - End of configuration.
+06:46:30,800 |-INFO in ch.qos.logback.classic.joran.JoranConfigurator@c81cdd1 - Registering current configuration as safe fallback point
+```
+
+#### 设置日志的位置
+
+设置logback日志配置文件的位置：
+```shell
+java -Dlogback.configurationFile=​/path/to/config.​xml chapters.configuration.​MyApp1
+```
+
+
 
 
 ### Reference
 
 - [https://www.slf4j.org/manual.html](https://www.slf4j.org/manual.html)
+- [https://logback.qos.ch/manual/index.html](https://logback.qos.ch/manual/index.html)

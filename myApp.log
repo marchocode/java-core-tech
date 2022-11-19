@@ -1,0 +1,4 @@
+LogTest newValue=10,oldValue=8
+LogTest newValue=10,oldValue=8
+LogTest newvalue=10,oldValue=8
+new Logger type

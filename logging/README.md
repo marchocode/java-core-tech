@@ -63,3 +63,14 @@ finally 子句不管有无错误的出现，都会执行，一般用于清理上
 
 ### Try-catch-resources
 实现了 AutoCloseable 接口的资源，提供自动关闭的语法糖
+
+
+### Logger
+
+#### Slf4j 
+经典日志框架，定义框架的接口，
+
+
+### Reference
+
+- [https://www.slf4j.org/manual.html](https://www.slf4j.org/manual.html)

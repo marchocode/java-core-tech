@@ -34,5 +34,6 @@ public class SimpleLogger {
         // LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         // StatusPrinter.print(loggerContext);
 
+        LOG.error("LogTest error, test null pointer",new NullPointerException());
     }
 }
